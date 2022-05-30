@@ -15,7 +15,9 @@ struct VarInd {
         objectCount++;
     }
 
-    int showIndex()
+    int showIndex() {
+        return int_index;
+    }
 };
 int VarInd::objectCount = 1;
 
@@ -42,25 +44,27 @@ void f_one_num_grid(int boardSize) {
 
                 for (int l = 1; l <= 9; l++) {
                     if (l == k) continue;
-                    cout << "-G_" << i << "_" << j << "_" << k << " ";
+                    // cout << "-G_" << i << "_" << j << "_" << k << " ";
                     name = "G_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k);
                     VarInd atom1(name);
                     if (isUnique(atom1)) var_vect.push_back(atom1);
 
                     // cout << "-G_" << i << "_" << j << "_" << l << " ";
-                    // name = "-G_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k);
-                    // VarInd atom2(name);
+                    name = "-G_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k);
+                    VarInd atom2(name);
                     if (isUnique(atom2)) var_vect.push_back(atom2);
-                    cout << "-" << atom1.showIndex(name);
-                    // cout << endl;
+                    cout << "-" << atom1.showIndex();
+                    cout << " ";
+                    cout << "-" << atom2.showIndex();
+                    cout << endl;
                     total_clause++;
                 }
-                // cout << endl;
+                cout << endl;
                 total_clause++;
             }
         }
     }
-    // cout << endl;
+    cout << endl;
 }
 
 void f_subgrid_to_grid(int boardSize, int subGridSize) {
@@ -72,6 +76,7 @@ void f_subgrid_to_grid(int boardSize, int subGridSize) {
                 VarInd atom2(SB);
                 var_vect.push_back(atom2);
                 // cout << "-SB_" << si << "_" << sj << "_" << num << " ";
+                cout << "-" << atom2.showIndex() << " ";
 
                 for (int gi = (si*3) - 3 + 1; gi <= si*3; gi++) {
                     for (int gj = (sj*3) - 3 + 1; gj <= sj*3; gj++) {
@@ -80,15 +85,15 @@ void f_subgrid_to_grid(int boardSize, int subGridSize) {
                         var_vect.push_back(name);
                         total_variable++;
                         // cout << "G_" << gi << "_" << gj << "_" << num << " ";
-
+                        cout <<  atom.showIndex() << " ";
                     }
                 }
-                // cout << endl;
+                cout << endl;
                 total_clause++;
             }
         }
     }
-    // cout << endl;
+    cout << endl;
 }
 
 void f_row_to_grid(int boardSize) {
@@ -99,17 +104,19 @@ void f_row_to_grid(int boardSize) {
         VarInd atom1(R);
         var_vect.push_back(atom1);
         // cout << "-R_" << i << "_" << r_j << " ";
+        cout << "-" << atom1.showIndex() << " ";
         for (int j = 1; j <= boardSize; j++) {
             string G = "G_" + to_string(i) + "_" + to_string(j) + "_" + to_string(r_j);
             VarInd atom2(G);
             var_vect.push_back(atom2);
             total_variable++;
             // cout << "G_" << i << "_" << j << "_" << r_j << " " ;
+            cout << "-" << atom2.showIndex() << " ";
         }
-        // cout << endl;
+        cout << endl;
         total_clause++;
     }
-    // cout << endl;
+    cout << endl;
 }
 
 void f_col_to_grid(int boardSize) {
@@ -120,22 +127,24 @@ void f_col_to_grid(int boardSize) {
         VarInd atom1(C);
         var_vect.push_back(atom1);
         // cout << "-C_" << i << "_" << c_j << " ";
+        cout << atom1.showIndex() << " ";
         for (int j = 1; j <= boardSize; j++) {
             string G = "G_" + to_string(j) + "_" + to_string(i) + "_" + to_string(c_j);
             VarInd atom2(G);
             var_vect.push_back(atom2);
             total_variable++;
             // cout << "G_" << j << "_" << i << "_" << c_j << " ";
+            cout << atom2.showIndex() << " ";
         }
-        // cout << endl;
+        cout << endl;
         total_clause++;
     }
-    // cout << endl;
+    cout << endl;
 }
 
 void f_mentions(int boardSize, int subGridSize) {
     // cout << "F_Mentions: ";
-    // cout << endl;
+    cout << endl;
 
     for (int i = 1; i <= boardSize; i++) {
         for (int j = 1; j <= boardSize; j++) {
@@ -144,8 +153,9 @@ void f_mentions(int boardSize, int subGridSize) {
             var_vect.push_back(atom);
             total_variable++;
             // cout << "R_" << i << "_" << j << " ";
+            cout << atom.showIndex() << " ";
         }
-        // cout << endl;
+        cout << endl;
         total_clause++;
     }
 
@@ -157,12 +167,13 @@ void f_mentions(int boardSize, int subGridSize) {
             var_vect.push_back(atom);
             total_variable++;
             // cout << "C_" << j << "_" << i << " ";
+            cout << atom.showIndex() << " ";
         }
-        // cout << endl;
+        cout << endl;
         total_clause++;
     }
 
-    // cout << endl;
+    cout << endl;
     for (int si = 1; si <= subGridSize; si++) {
         for (int sj = 1; sj <= subGridSize; sj++) {
             for (int num = 1; num <= boardSize; num++) {
@@ -171,14 +182,14 @@ void f_mentions(int boardSize, int subGridSize) {
                 var_vect.push_back(atom);
                 total_variable++;
                 // cout << "SB_" << si << "_" << sj << "_" << num << " ";
-
+                cout << atom.showIndex() << " ";
             }
-            // cout << endl;
+            cout << endl;
             total_clause++;
         }
     }
 
-    // cout << endl;
+    cout << endl;
 }
 
 
@@ -195,6 +206,7 @@ void custom_unit_clauses(vector<vector<int>> &board) {
                 string atom = "G_" + to_string(i+1) + "_" + to_string(j+1) + "_" + to_string(num);
                 VarInd temp(atom);
                 if (isUnique(temp)) var_vect.push_back(temp);
+                cout << temp.showIndex() << " ";
                 total_variable++;
                 total_clause++;
             }
@@ -230,7 +242,7 @@ int main(void) {
     custom_unit_clauses(board);
 
     cout << "Output from var vect\n";
-    // cout << "p " << "cnf " << total_clause << " " << total_variable << endl;
+    cout << "p " << "cnf " << total_clause << " " << total_variable << endl;
     for (auto atom: var_vect) {
         cout << atom.int_index << " ";
 
